@@ -2,7 +2,7 @@
 
 from flask import Flask, render_template, redirect, session, flash
 from flask_debugtoolbar import DebugToolbarExtension
-from models import connect_db, db, User
+from models import connect_db, db, User, Note
 from forms import RegisterForm, LoginForm
 
 app = Flask(__name__)
@@ -77,6 +77,7 @@ def authorize(username):
     """Example hidden page for logged-in users only."""
 
     user = User.query.get_or_404(username)
+    notes = user.notes
 
     if "username" not in session:
         flash("You must be logged in to view!")
@@ -89,7 +90,7 @@ def authorize(username):
 
     else:
 
-        return render_template("userinfo.html", user=user)
+        return render_template("userinfo.html", user=user, notes=notes)
 
 @app.route("/logout", methods = ["POST"])
 def logout():
@@ -99,3 +100,5 @@ def logout():
     session.pop("username", None)
 
     return redirect("/")
+
+##################################################################

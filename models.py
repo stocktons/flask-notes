@@ -27,6 +27,7 @@ class User(db.Model):
     last_name = db.Column(db.String(30), 
                           nullable=False) 
 
+    notes = db.relationship('Note', backref='username')
     
      # start_register
     @classmethod
@@ -57,3 +58,21 @@ class User(db.Model):
         else:
             return False
     # end_authenticate
+
+
+class Note(db.Model):
+    """Note."""
+    
+    __tablename__ = "notes"
+
+    id = db.Column(db.Integer, 
+                   primary_key=True,
+                   autoincrement=True) 
+    title = db.Column(db.String(100), 
+                        nullable=False) 
+    content = db.Column(db.Text, 
+                      nullable=False, 
+                      unique=True)
+    owner = db.Column(db.ForeignKey('users.username')) 
+
+    

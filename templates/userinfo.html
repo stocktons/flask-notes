@@ -5,9 +5,31 @@
 {% block content %}
 
 <ul>
-    <li>Username: {{user.username}}</li>
-    <li>Email: {{user.email}}</li>
+  <li>Username: {{user.username}}</li>
+  <li>Email: {{user.email}}</li>
 </ul>
+
+<div class="row notes-listing">
+  <ul>
+    {% for note in notes %}
+    {% if notes %}
+    <div class="col-3">
+      <li> {{ note }} 
+        <button href="/notes/{{note.id}}/update" type="button" class="btn btn-primary btn-sm" >Edit</button>
+        <button href="/notes/{{note.id}}/delete" type="button" class="btn btn-danger btn-sm">Delete</button>
+      </li>
+    </div>
+    {% endif %}
+    {% else %}
+  </ul>
+  <div class="col-12">No notes yet.</div>
+  {% endfor %}
+
+</div>
+
+<button href="/users/{{username}}/notes/add" type="button" class="btn btn-success btn-sm">Add a Note</button>
+<button href="/users/{{username}/delete" type="button" class="btn btn-danger btn-sm">Delete Profile</button>
+
 
 <!-- maybe change display to inline-block -->
 <form method='POST' action='/logout'>
