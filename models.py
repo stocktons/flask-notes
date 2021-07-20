@@ -1,7 +1,10 @@
 """Models for Notes app."""
 from flask_sqlalchemy import SQLAlchemy
+from flask_bcrypt import Bcrypt
 
 db = SQLAlchemy()
+
+bcrypt = Bcrypt()
 
 def connect_db(app):
     db.app = app
@@ -13,8 +16,7 @@ class User(db.Model):
     __tablename__ = "users"
 
     username = db.Column(db.String(20), 
-                        primary_key=True, 
-                        autoincrement=True) 
+                        primary_key=True) 
     password = db.Column(db.String(100), 
                         nullable=False) 
     email = db.Column(db.String(50), 
@@ -26,12 +28,32 @@ class User(db.Model):
                           nullable=False) 
 
     
-    def serialize(self):
-        """Serialize dictionary"""
-        return {
-                "id": self.id,
-                "flavor": self.flavor,
-                "size": self.size,   
-                "rating": self.rating,
-                "image": self.image,
-        }
+     # start_register
+    @classmethod
+    def register(cls, username, pwd, email, first_name, last_name):
+        """Register user w/hashed password & return user."""
+
+        hashed = bcrypt.generate_password_hash(pwd).decode('utf8')
+
+        # return instance of user w/username and hashed pwd
+        return cls(username=username, password=hashed, email=email, first_name=first_name, 
+        last_name=last_name)
+
+    # end_register
+
+    # start_authenticate
+    @classmethod
+    def authenticate(cls, username, pwd):
+        """Validate that user exists & password is correct.
+
+        Return user if valid; else return False.
+        """
+
+        u = cls.query.filter_by(username=username).one_or_none()
+
+        if u and bcrypt.check_password_hash(u.password, pwd):
+            # return user instance
+            return u
+        else:
+            return False
+    # end_authenticate
