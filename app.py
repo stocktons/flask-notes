@@ -43,7 +43,7 @@ def register():
         session["username"] = user.username
 
         # on successful login, redirect to secret page
-        return redirect("/secret")
+        return redirect("/users/<username>")
 
     else:
         return render_template("register.html", form=form)
@@ -64,7 +64,7 @@ def login():
 
         if user:
             session["username"] = user.username  # keep logged in
-            return redirect("/secret")
+            return redirect(f"/users/{username}")
 
         else:
             form.username.errors = ["Bad name/password"]
@@ -72,9 +72,11 @@ def login():
     return render_template("login.html", form=form)
 
 
-@app.route("/secret")
-def secret():
+@app.route("/users/<username>")
+def authorize(username):
     """Example hidden page for logged-in users only."""
+
+    user = User.query.get_or_404(username)
 
     if "username" not in session:
         flash("You must be logged in to view!")
@@ -86,4 +88,14 @@ def secret():
         # raise Unauthorized()
 
     else:
-        return render_template("secret.html")
+
+        return render_template("userinfo.html", user=user)
+
+@app.route("/logout", methods = ["POST"])
+def logout():
+    """Logs user out and redirects to homepage."""
+
+    # Remove "username" if present, but no errors if it wasn't
+    session.pop("username", None)
+
+    return redirect("/")
