@@ -27,7 +27,8 @@ class User(db.Model):
     last_name = db.Column(db.String(30), 
                           nullable=False) 
 
-    notes = db.relationship('Note', backref='username')
+    notes = db.relationship('Note', backref='username', cascade="all, delete-orphan")
+    
     
      # start_register
     @classmethod
@@ -71,8 +72,7 @@ class Note(db.Model):
     title = db.Column(db.String(100), 
                         nullable=False) 
     content = db.Column(db.Text, 
-                      nullable=False, 
-                      unique=True)
-    owner = db.Column(db.ForeignKey('users.username')) 
+                      nullable=False)
+    owner = db.Column(db.ForeignKey('users.username'), nullable=False) 
 
     

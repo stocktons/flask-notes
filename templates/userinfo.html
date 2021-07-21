@@ -3,7 +3,7 @@
 {% block title %} Hello {{user.first_name}} {{user.last_name}} {% endblock %}
 
 {% block content %}
-
+<h1> Hello {{user.first_name}} {{user.last_name}} </h1>
 <ul>
   <li>Username: {{user.username}}</li>
   <li>Email: {{user.email}}</li>
@@ -14,9 +14,11 @@
     {% for note in notes %}
     {% if notes %}
     <div class="col-3">
-      <li> {{ note }} 
-        <button href="/notes/{{note.id}}/update" type="button" class="btn btn-primary btn-sm" >Edit</button>
-        <button href="/notes/{{note.id}}/delete" type="button" class="btn btn-danger btn-sm">Delete</button>
+      <li> {{ note.title }}
+        <button href="/notes/{{note.id}}/update" type="button" class="btn btn-primary btn-sm"
+          method="POST">Edit</button>
+        <button href="/notes/{{note.id}}/delete" type="button" class="btn btn-danger btn-sm"
+          method="POST">Delete</button>
       </li>
     </div>
     {% endif %}
@@ -26,14 +28,16 @@
   {% endfor %}
 
 </div>
-
-<button href="/users/{{username}}/notes/add" type="button" class="btn btn-success btn-sm">Add a Note</button>
-<button href="/users/{{username}/delete" type="button" class="btn btn-danger btn-sm">Delete Profile</button>
-
-
+<form>
+  <!--<button href="/users/{{username}}/notes/add" type="button" class="btn btn-success btn-sm" method="POST">Add a Note</button>
+<button href="/users/{{username}}/delete" type="button" class="btn btn-danger btn-sm" method="POST">Delete Profile</button> -->
+  <button class="btn btn-success btn-sm" formaction="/users/{{user.username}}/notes/add" formmethod="GET">Add a
+    Note</button>
+  <button class="btn btn-danger btn-sm" formaction="/users/{{user.username}}/delete" formmethod="POST">Delete</button>
+</form>
 <!-- maybe change display to inline-block -->
-<form method='POST' action='/logout'>
-  <input type='submit' value='Logout'>
+<form method="POST" action="/logout">
+  <input type="submit" value="Logout">
 </form>
 
 <!-- <a href='/users/{{ user.id }}/posts/new'><button>Add Post</button></a> -->

@@ -12,15 +12,15 @@ User.query.delete()
 Note.query.delete()
 
 # Add users
-users = [User(username="bobthebob", password="Björk", email="adw@adf.com", first_name="Bob", last_name ="Bobert"),
-         User(username="bobthebob2", password="Björk", email="adc@adf.com", first_name = "Bob2", last_name = "Bobert2"),
-         User(username="bobthebob3", password="Björk", email="ade@adf.com", first_name = "Bob3", last_name = "Bobert3"),
+users = [User.register(username="bobthebob", pwd="1234", email="adw@adf.com", first_name="Bob", last_name ="Bobert"),
+         User.register(username="bobthebob2", pwd="1234", email="adc@adf.com", first_name = "Bob2", last_name = "Bobert2"),
+         User.register(username="bobthebob3", pwd="1234", email="ade@adf.com", first_name = "Bob3", last_name = "Bobert3"),
         ]
 
 # Add notes
-notes = [Note(title="Beethoven Works", content="Beethoven only", owner="bobthebob"),
-        Note(title="Beethoven Works2", content="Beethoven only2", owner="bobthebob"),
-        Note(title="Beethoven Works3", content="Beethoven only3", owner="bobthebob")
+notes = [Note(title="Beethoven Works", content="Beethoven only", owner="bobthebob2"),
+        Note(title="Beethoven Works2", content="Beethoven only2", owner="bobthebob2"),
+        Note(title="Beethoven Works3", content="Beethoven only3", owner="bobthebob2")
         ]
 
 # Add new objects to session, so they'll persist

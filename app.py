@@ -43,7 +43,7 @@ def register():
         session["username"] = user.username
 
         # on successful login, redirect to secret page
-        return redirect("/users/<username>")
+        return redirect(f"/users/{username}")
 
     else:
         return render_template("register.html", form=form)
@@ -79,7 +79,7 @@ def authorize(username):
     user = User.query.get_or_404(username)
     notes = user.notes
 
-    if "username" not in session:
+    if "username" not in session or username != session["username"]: # REALLY IMPORTANT
         flash("You must be logged in to view!")
         return redirect("/")
 
@@ -101,4 +101,50 @@ def logout():
 
     return redirect("/")
 
+# @app.route("/users/<username>/notes/add", methods=["POST", "GET"])
+# def add_user(username):
+#     """Displays a form to add notes."""
+
+#     user = User.query.get_or_404(username)
+   
+
+
+#     # db.session.add(note)
+#     # db.session.commit()
+
+#     return redirect(f"/users/{user.username}")
+
+@app.route("/users/<username>/delete", methods=["POST"])
+def delete_user(username):
+    """Deletes user and all their posts from database."""
+
+    if "username" not in session or username != session["username"]: # REALLY IMPORTANT
+        flash("You can't delete someone else, you slimeball! (Or if you are really you, log in.)")
+        return redirect("/")
+
+        # alternatively, can return HTTP Unauthorized status:
+        #
+        # from werkzeug.exceptions import Unauthorized
+        # raise Unauthorized()
+
+    user = User.query.get_or_404(username)
+
+    db.session.delete(user)
+    db.session.commit()
+    flash(f"User {username} deleted.")
+
+    return redirect("/")
+
 ##################################################################
+# Notes Routes
+@app.route("/notes/<note_id>/delete", methods=["POST"])
+def delete_note(note_id):
+    """Deletes note from database."""
+
+    note = Note.query.get_or_404(note_id)
+    user = note.user
+    
+    db.session.delete(note)
+    db.session.commit()
+
+    return redirect(f"/users/{user.username}")
